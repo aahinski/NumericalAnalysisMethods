@@ -57,11 +57,12 @@ public class NewtonMethodForNonLinearEquationsSystems {
         Point solution = new Point();
         solution.x = x_KPlusOne;
         solution.y = y_KPlusOne;
+        System.out.println(Math.max(f(solution.x, solution.y), g(solution.x, solution.y)));
         return solution;
     }
 
     public static void main(String[] args) {
-        Point solution = new Point(algorithm(-1.5, -6.0, Math.pow(10, -7)));
+        Point solution = new Point(algorithm(-1.5, -5.0, Math.pow(10, -7)));
         System.out.println(solution.x);
         System.out.println(solution.y);
     }

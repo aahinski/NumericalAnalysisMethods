@@ -1,3 +1,5 @@
+import static java.lang.Math.abs;
+
 class Point {
     public double x;
     public double y;
@@ -11,11 +13,14 @@ class Point {
 }
 
 public class GaussSeidelMethod {
-    static double norm(double x_1, double y_1, double x_2, double y_2) {
+    public static double norm(double x_1, double y_1, double x_2, double y_2) {
         double x = x_1 - x_2;
         double y = y_1 - y_2;
-        return Math.max(Math.abs(x), Math.abs(y));
+        return Math.max(abs(x), abs(y));
     }
+
+    static double f(double x, double y) { return (y * x + y - 5); }
+    static double g(double x, double y) { return (y - (4 * x) - 1); }
 
     static double phiForF(double x, double y) {
         return ((5 - y) / y);
@@ -23,7 +28,7 @@ public class GaussSeidelMethod {
 
     static double fixedPointIterationForF(double x_K, double eps, double y_K) {
         double x_KPlusOne = phiForF(x_K, y_K);
-        while(Math.abs(x_K - x_KPlusOne) >= eps) {
+        while(abs(x_K - x_KPlusOne) >= eps) {
             x_K = x_KPlusOne;
             x_KPlusOne = phiForF(x_K, y_K);
         }
@@ -36,7 +41,7 @@ public class GaussSeidelMethod {
 
     static double fixedPointIterationForG(double y_K, double eps, double x_KPlusOne) {
         double y_KPlusOne = phiForG(y_K, x_KPlusOne);
-        while(Math.abs(y_K - y_KPlusOne) >= eps) {
+        while(abs(y_K - y_KPlusOne) >= eps) {
             y_K = y_KPlusOne;
             y_KPlusOne = phiForG(y_K, x_KPlusOne);
         }
@@ -60,11 +65,12 @@ public class GaussSeidelMethod {
         Point solution = new Point();
         solution.x = x_KPlusOne;
         solution.y = y_KPlusOne;
+        System.out.println(Math.max(abs(f(solution.x, solution.y)), abs(g(solution.x, solution.y))));
         return solution;
     }
 
     public static void main(String[] args) {
-        Point solution = new Point(algorithm(-1.5, -6.0, Math.pow(10, -7)));
+        Point solution = new Point(algorithm(-1.5, -2.5, Math.pow(10, -7)));
         System.out.println(solution.x);
         System.out.println(solution.y);
     }
