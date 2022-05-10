@@ -79,9 +79,10 @@ public class LeastSquares {
             b[l] = sum;
         }
         double[] c = gaussianElimination(A, b);
-        double x1 = 0.15 + 1 / 15;
+        double x1 = 0.15 + 1.0 / 15.0;
+        System.out.println("huy " + x1);
         double x2 = 0.7;
-        double x3 = 1.15 - 1 / 30;
+        double x3 = 1.15 - 1.0 / 30.0;
         System.out.println(approximation(c, x1));
         System.out.println(f(x1) - approximation(c, x1));
         System.out.println(approximation(c, x2));

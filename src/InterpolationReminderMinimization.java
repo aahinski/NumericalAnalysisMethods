@@ -1,6 +1,11 @@
-public class LagrangePolynomial {
+public class InterpolationReminderMinimization {
+
     static public double f(double x) {
         return (0.15 * Math.exp(x) + 0.85 * Math.sin(x));
+    }
+
+    static public double ChebyshevNode(double a, double b, double k, double n) {
+        return ((a + b + (b - a) * Math.cos(((2 * k + 1) * Math.PI)/(2 * (n + 1)))) / 2);
     }
 
     static int factorial(int n) {
@@ -9,11 +14,8 @@ public class LagrangePolynomial {
         return n * factorial(n - 1);
     }
 
-    static public double interpolationReminder(double value, double[] x, double max) {
-        double w = 1;
-        for(int j = 0; j < x.length; j++)
-            w *= (value - x[j]);
-        return (w * max / factorial(x.length));
+    static double interpolationReminder(double a, double b, int n, double max) {
+        return ((max * Math.pow((b - a), (n + 1)))/(factorial(n + 1) * Math.pow(2, (2 * n + 1))));
     }
 
     static public double trueResidual(double x, double y) {
@@ -37,19 +39,28 @@ public class LagrangePolynomial {
     }
 
     public static void main(String[] args) {
-        double[] x = new double[11];
-        double[] f = new double[11];
+        double a = 0.15;
+        double b = 1.15;
         int n = 10;
+        double[] x = new double[11];
         for (int i = 0; i < n + 1; i++) {
             x[i] = 0.15 + 0.1 * i;
-            f[i] = f(x[i]);
         }
-        double x1 = 0.15 + (2.0 / 3.0) * 0.1;
+        double[] ChebyshevNodes = new double[11];
+        double[] f = new double[11];
+        for (int k = 0; k < n + 1; k++) {
+            ChebyshevNodes[k] = ChebyshevNode(a, b, k, n);
+            System.out.println();
+            System.out.println(ChebyshevNodes[k]);
+            f[k] = f(ChebyshevNodes[k]);
+            System.out.println(f[k]);
+        }
+        double x1 = 0.15 + 1.0 / 15.0;
         double x2 = 0.65 + (1.0 / 2.0) * 0.1;
-        double x3 = 1.15 - (1.0 / 3.0) * 0.1;
-        double interpolationInX1 = lagrangePolinomial(x1, x, f);
-        double interpolationInX2 = lagrangePolinomial(x2, x, f);
-        double interpolationInX3 = lagrangePolinomial(x3, x, f);
+        double x3 = 1.15 - 1.0 / 30.0;
+        double interpolationInX1 = lagrangePolinomial(x1, ChebyshevNodes, f);
+        double interpolationInX2 = lagrangePolinomial(x2, ChebyshevNodes, f);
+        double interpolationInX3 = lagrangePolinomial(x3, ChebyshevNodes, f);
         System.out.println(interpolationInX1);
         System.out.println(interpolationInX2);
         System.out.println(interpolationInX3);
@@ -57,8 +68,6 @@ public class LagrangePolynomial {
         System.out.println(trueResidual(f(x2), interpolationInX2));
         System.out.println(trueResidual(f(x3), interpolationInX3));
         double max = 0.6661802798364;
-        System.out.println(interpolationReminder(x1, x, max));
-        System.out.println(interpolationReminder(x2, x, max));
-        System.out.println(interpolationReminder(x3, x, max));
+        System.out.println(interpolationReminder(a, b, n, max));
     }
 }
